@@ -1,4 +1,4 @@
-﻿// 	    Player1: Right Handed, Lee Chong Wei
+// 	    Player1: Right Handed, Lee Chong Wei
 // -----+------
 // |    |     |   
 // | 3  |  4  | 
@@ -79,7 +79,8 @@ Lin_ServeFrom6 = pcase {
       		                                                        else { turn = (turn+1)%4} }-> NextPt
 }
 
-//SHOULD THE NUMBER ADD UP TO 100???
+NextPt = Lee_Serve [] Lin_Serve [] ([won != na] GameOver -> Skip);
+
 Lee_1 = pcase {
  191: Lee_ForeHand -> Lee_ForeHand1
  10: Lee_BackHand -> Lee_BackHand1
@@ -87,44 +88,44 @@ Lee_1 = pcase {
 }
 
 Lee_2 = pcase {
- 32: Lee_ForeHand -> Lee_ForeHand1
- 147: Lee_BackHand -> Lee_BackHand1
+ 32: Lee_ForeHand -> Lee_ForeHand2
+ 147: Lee_BackHand -> Lee_BackHand2
  9: No_Hit -> {LinScore++; if (LinScore == 21){won = Lin}}
 }
 
 Lee_3 = pcase {
- 166: Lee_ForeHand -> Lee_ForeHand1
- 2: Lee_BackHand -> Lee_BackHand1
+ 166: Lee_ForeHand -> Lee_ForeHand3
+ 2: Lee_BackHand -> Lee_BackHand3
  8: No_Hit -> {LinScore++; if (LinScore == 21){won = Lin}}
 }
 
 Lee_4 = pcase {
- 84: Lee_ForeHand -> Lee_ForeHand1
- 34: Lee_BackHand -> Lee_BackHand1
+ 84: Lee_ForeHand -> Lee_ForeHand4
+ 34: Lee_BackHand -> Lee_BackHand4
  10: No_Hit -> {LinScore++; if (LinScore == 21){won = Lin}}
 }
 
 Lin_5 = pcase {
- 192: Lin_ForeHand -> Lin_ForeHand1
- 35: Lin_BackHand -> Lin_BackHand1
+ 192: Lin_ForeHand -> Lin_ForeHand5
+ 35: Lin_BackHand -> Lin_BackHand5
  7: No_Hit -> {LeeScore++; if (LeeScore == 21){won = Lee}}
 }
 
 Lin_6 = pcase {
- 20: Lin_ForeHand -> Lin_ForeHand1
- 177: Lin_BackHand -> Lin_BackHand1
+ 20: Lin_ForeHand -> Lin_ForeHand6
+ 177: Lin_BackHand -> Lin_BackHand6
  1: No_Hit -> {LeeScore++; if (LeeScore == 21){won = Lee}}
 }
 
 Lin_7 = pcase {
- 87: Lin_ForeHand -> Lin_ForeHand1
- 2: Lin_BackHand -> Lin_BackHand1
+ 87: Lin_ForeHand -> Lin_ForeHand7
+ 2: Lin_BackHand -> Lin_BackHand7
  9: No_Hit -> {LeeScore++; if (LeeScore == 21){won = Lee}}
 }
 
 Lin_8 = pcase {
- 116: Lin_ForeHand -> Lin_ForeHand1
- 38: Lin_BackHand -> Lin_BackHand1
+ 116: Lin_ForeHand -> Lin_ForeHand8
+ 38: Lin_BackHand -> Lin_BackHand8
  4: No_Hit -> {LeeScore++; if (LeeScore == 21){won = Lee}}
 }
 
