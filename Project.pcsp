@@ -44,37 +44,29 @@ Lee_Serve = [won == na && turn == lee_1_ct ]LeeReady_1_Ct -> Lee_ServeFrom1 [] [
 Lee_ServeFrom1 = pcase {
   100: To_6 {ball = 6} -> Lin_6
   0: To_8 {ball = 8} -> Lin_8
-  //WINNING SCORE = 21??
-  //ELSE LOGIC NOT SURE
   0: Serve_err{ball=9} -> Leefault{linscore++; if (linscore >= 21 && (linscore-leescore) >= 2 && linscore <= 30) {won = lin} 
       		                                                        else { turn = (turn+1)%4} }-> NextPt
 };
 
-//SHOULD THE NUMBER ADD UP TO 100???
 Lee_ServeFrom2 = pcase {
   24: To_5 {ball = 5} -> Lin_5
   5: To_7 {ball = 7} -> Lin_7
-  //WINNING SCORE = 21??
   0: Serve_err{ball=9} -> Leefault{linscore++; if (linscore == 21) {won = lin} 
       		                                                        else { turn = (turn+1)%4} }-> NextPt
 };
 
 Lin_Serve = [won == na && turn == lin_5_ct]LinReady_5_Ct -> Lin_ServeFrom5 [] [ won == na && turn == lin_6_ct] LinReady_6_Ct -> Lin_ServeFrom6;
 
-//SHOULD THE NUMBER ADD UP TO 100???
 Lin_ServeFrom5 = pcase {
   27: To_2 {ball = 2} -> Lee_2
   4: To_4 {ball = 4} -> Lee_4
-  //WINNING SCORE = 21??
   0: Serve_err{ball=9} -> Linfault{leescore++; if (leescore == 21) {won = lee} 
       		                                                        else { turn = (turn+1)%4} }-> NextPt
 };
 
-//SHOULD THE NUMBER ADD UP TO 100???
 Lin_ServeFrom6 = pcase {
   28: To_1 {ball = 1} -> Lee_1
   4: To_3 {ball = 3} -> Lee_3
-  //WINNING SCORE = 21??
   0: Serve_err{ball=9} -> Linfault{leescore++; if (leescore == 21) {won = lee} 
       		                                                        else { turn = (turn+1)%4} }-> NextPt
 }
