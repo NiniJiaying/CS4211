@@ -1,0 +1,261 @@
+﻿// 	    Player1: Right Handed, Lee Chong Wei
+// -----+------
+// |    |     |   
+// | 3  |  4  | 
+// |    |     |   
+// -----+------
+// |    |     |   
+// | 1  |  2  | 
+// |    |     |   
+// ============
+// |    |     |  
+// | 5  |  6  | 
+// |    |     | 
+// -----+------
+// |    |     |
+// | 7  |  8  |
+// |    |     |
+// -----+------
+// 	    Player2: Left Handed, Lin Dan
+//       *****
+
+
+#define lee_1_ct 0;
+#define lee_2_ct 1;
+#define lin_6_ct 2;
+#define lin_5_ct 3;
+#define na 2;
+
+enum{lee_1_ct, lee_2_ct, lin_5_ct, lin_6_ct}; //serve position
+enum{lee_1_ct, lee_2_ct, lee_3_ct, lee_4_ct, lin_5_ct, lin_6_ct, lin_7_ct, lin_8_ct}; //return position
+enum{lee, lin, na};
+
+var turn = na; //serve turn
+var leescore = 0;
+var linscore = 0;
+var won = na;
+var ball = 9;
+
+TieBreakGame = WhoServe1st; (Lee_Serve [] Lin_Serve);
+
+WhoServe1st = []i:{lee_1_ct,lin_6_ct}@ TossCoin{turn = i} -> Skip; //ALWAYS FROM LEST SIDE???
+Lee_Serve = [won == na && turn == lee_1_ct ]LeeReady_1_Ct -> Lee_ServeFrom1 [] [won == na && turn == lee_2_ct] LeeReady_2_Ct -> Lee_ServeFrom2;
+
+Lee_ServeFrom1 = pcase {
+  100: To_6 {ball = 6} -> Lin_6
+  0: To_8 {ball = 8} -> Lin_8
+  //WINNING SCORE = 21??
+  //ELSE LOGIC NOT SURE
+  0: Serve_err{ball=9} -> Leefault{linscore++; if (linscore >= 21 && (linscore-leescore) >= 2 && linscore <= 30) {won = lin} 
+      		                                                        else { turn = (turn+1)%4} }-> NextPt
+};
+
+//SHOULD THE NUMBER ADD UP TO 100???
+Lee_ServeFrom2 = pcase {
+  24: To_5 {ball = 5} -> Lin_5
+  5: To_7 {ball = 7} -> Lin_7
+  //WINNING SCORE = 21??
+  0: Serve_err{ball=9} -> Leefault{linscore++; if (linscore == 21) {won = lin} 
+      		                                                        else { turn = (turn+1)%4} }-> NextPt
+};
+
+Lin_Serve = [won == na && turn == lin_5_ct]LinReady_5_Ct -> Lin_ServeFrom5 [] [ won == na && turn == lin_6_ct] LinReady_6_Ct -> Lin_ServeFrom6;
+
+//SHOULD THE NUMBER ADD UP TO 100???
+Lin_ServeFrom5 = pcase {
+  27: To_2 {ball = 2} -> Lee_2
+  4: To_4 {ball = 4} -> Lee_4
+  //WINNING SCORE = 21??
+  0: Serve_err{ball=9} -> Linfault{leescore++; if (leescore == 21) {won = lee} 
+      		                                                        else { turn = (turn+1)%4} }-> NextPt
+};
+
+//SHOULD THE NUMBER ADD UP TO 100???
+Lin_ServeFrom6 = pcase {
+  28: To_1 {ball = 1} -> Lee_1
+  4: To_3 {ball = 3} -> Lee_3
+  //WINNING SCORE = 21??
+  0: Serve_err{ball=9} -> Linfault{leescore++; if (leescore == 21) {won = lee} 
+      		                                                        else { turn = (turn+1)%4} }-> NextPt
+}
+
+//SHOULD THE NUMBER ADD UP TO 100???
+Lee_1 = pcase {
+ 191: Lee_ForeHand -> Lee_ForeHand1
+ 10: Lee_BackHand -> Lee_BackHand1
+ 2: No_Hit -> {linscore++; if (linscore == 21){won = lin} else { turn = (turn+1)%4} }-> NextPt}
+}
+
+Lee_2 = pcase {
+ 32: Lee_ForeHand -> Lee_ForeHand1
+ 147: Lee_BackHand -> Lee_BackHand1
+ 9: No_Hit -> {LinScore++; if (LinScore == 21){won = Lin}}
+}
+
+Lee_3 = pcase {
+ 166: Lee_ForeHand -> Lee_ForeHand1
+ 2: Lee_BackHand -> Lee_BackHand1
+ 8: No_Hit -> {LinScore++; if (LinScore == 21){won = Lin}}
+}
+
+Lee_4 = pcase {
+ 84: Lee_ForeHand -> Lee_ForeHand1
+ 34: Lee_BackHand -> Lee_BackHand1
+ 10: No_Hit -> {LinScore++; if (LinScore == 21){won = Lin}}
+}
+
+Lin_5 = pcase {
+ 192: Lin_ForeHand -> Lin_ForeHand1
+ 35: Lin_BackHand -> Lin_BackHand1
+ 7: No_Hit -> {LeeScore++; if (LeeScore == 21){won = Lee}}
+}
+
+Lin_6 = pcase {
+ 20: Lin_ForeHand -> Lin_ForeHand1
+ 177: Lin_BackHand -> Lin_BackHand1
+ 1: No_Hit -> {LeeScore++; if (LeeScore == 21){won = Lee}}
+}
+
+Lin_7 = pcase {
+ 87: Lin_ForeHand -> Lin_ForeHand1
+ 2: Lin_BackHand -> Lin_BackHand1
+ 9: No_Hit -> {LeeScore++; if (LeeScore == 21){won = Lee}}
+}
+
+Lin_8 = pcase {
+ 116: Lin_ForeHand -> Lin_ForeHand1
+ 38: Lin_BackHand -> Lin_BackHand1
+ 4: No_Hit -> {LeeScore++; if (LeeScore == 21){won = Lee}}
+}
+
+Lee_ForeHand1 = pcase {
+ 88: To_5{ball = 5} -> Lin_5
+ 32: To_6{ball = 6} -> Lin_6
+ 26: To_7{ball = 7} -> Lin_7
+ 40: To_8{ball = 8} -> Lin_8
+ 5: Error{ball = 9} -> {LinScore++; if (LinScore == 21){won = Lin}}
+}
+
+Lee_BackHand1 = pcase {
+ 3: To_5{ball = 5} -> Lin_5
+ 0: To_6{ball = 6} -> Lin_6
+ 5: To_7{ball = 7} -> Lin_7
+ 2: To_8{ball = 8} -> Lin_8
+ 0: Error{ball = 9} -> {LinScore++; if (LinScore == 21){won = Lin}}
+}
+
+Lee_ForeHand2 = pcase {
+ 5: To_5{ball = 5} -> Lin_5
+ 15: To_6{ball = 6} -> Lin_6
+ 0: To_7{ball = 7} -> Lin_7
+ 7: To_8{ball = 8} -> Lin_8
+ 5: Error{ball = 9} -> {LinScore++; if (LinScore == 21){won = Lin}}
+}
+
+Lee_BackHand2 = pcase {
+ 23: To_5{ball = 5} -> Lin_5
+ 58: To_6{ball = 6} -> Lin_6
+ 15: To_7{ball = 7} -> Lin_7
+ 45: To_8{ball = 8} -> Lin_8
+ 6: Error{ball = 9} -> {LinScore++; if (LinScore == 21){won = Lin}}
+}
+
+Lee_ForeHand3 = pcase {
+ 63: To_5{ball = 5} -> Lin_5
+ 29: To_6{ball = 6} -> Lin_6
+ 41: To_7{ball = 7} -> Lin_7
+ 23: To_8{ball = 8} -> Lin_8
+ 10: Error{ball = 9} -> {LinScore++; if (LinScore == 21){won = Lin}}
+}
+
+Lee_BackHand3 = pcase {
+ 1: To_5{ball = 5} -> Lin_5
+ 0: To_6{ball = 6} -> Lin_6
+ 0: To_7{ball = 7} -> Lin_7
+ 0: To_8{ball = 8} -> Lin_8
+ 1: Error{ball = 9} -> {LinScore++; if (LinScore == 21){won = Lin}}
+}
+
+Lee_ForeHand4 = pcase {
+ 18: To_5{ball = 5} -> Lin_5
+ 18: To_6{ball = 6} -> Lin_6
+ 5: To_7{ball = 7} -> Lin_7
+ 36: To_8{ball = 8} -> Lin_8
+ 7: Error{ball = 9} -> {LinScore++; if (LinScore == 21){won = Lin}}
+}
+
+Lee_BackHand4 = pcase {
+ 10: To_5{ball = 5} -> Lin_5
+ 17: To_6{ball = 6} -> Lin_6
+ 1: To_7{ball = 7} -> Lin_7
+ 5: To_8{ball = 8} -> Lin_8
+ 1: Error{ball = 9} -> {LinScore++; if (LinScore == 21){won = Lin}}
+}
+
+Lin_ForeHand5 = pcase {
+ 68: To_1{ball = 1} -> Lee_1
+ 27: To_2{ball = 2} -> Lee_2
+ 54: To_3{ball = 3} -> Lee_3
+ 32: To_4{ball = 4} -> Lee_4
+ 11: Error{ball = 9} -> {LeeScore++; if (LeeScore == 21){won = Lee}}
+}
+
+Lin_BackHand5 = pcase {
+ 6: To_1{ball = 1} -> Lee_1
+ 4: To_2{ball = 2} -> Lee_2
+ 23: To_3{ball = 3} -> Lee_3
+ 1: To_4{ball = 4} -> Lee_4
+ 1: Error{ball = 9} -> {LeeScore++; if (LeeScore == 21){won = Lee}}
+}
+
+Lin_ForeHand6 = pcase {
+ 3: To_1{ball = 1} -> Lee_1
+ 4: To_2{ball = 2} -> Lee_2
+ 2: To_3{ball = 3} -> Lee_3
+ 9: To_4{ball = 4} -> Lee_4
+2: Error{ball = 9} -> {LeeScore++; if (LeeScore == 21){won = Lee}}
+}
+
+Lin_BackHand6 = pcase {
+ 23: To_1{ball = 1} -> Lee_1
+ 61: To_2{ball = 2} -> Lee_2
+ 55: To_3{ball = 3} -> Lee_3
+ 26: To_4{ball = 4} -> Lee_4
+ 12: Error{ball = 9} -> {LeeScore++; if (LeeScore == 21){won = Lee}}
+}
+
+Lin_ForeHand7 = pcase {
+ 49: To_1{ball = 1} -> Lee_1
+ 14: To_2{ball = 2} -> Lee_2
+ 14: To_3{ball = 3} -> Lee_3
+ 5: To_4{ball = 4} -> Lee_4
+ 5: Error{ball = 9} -> {LeeScore++; if (LeeScore == 21){won = Lee}}
+}
+
+Lin_BackHand7 = pcase {
+ 1: To_1{ball = 1} -> Lee_1
+ 1: To_2{ball = 2} -> Lee_2
+ 0: To_3{ball = 3} -> Lee_3
+ 0: To_4{ball = 4} -> Lee_4
+ 0: Error{ball = 9} -> {LeeScore++; if (LeeScore == 21){won = Lee}}
+}
+
+Lin_ForeHand8 = pcase {
+ 20: To_1{ball = 1} -> Lee_1
+ 24: To_2{ball = 2} -> Lee_2
+ 24: To_3{ball = 3} -> Lee_3
+ 45: To_4{ball = 4} -> Lee_4
+ 3: Error{ball = 9} -> {LeeScore++; if (LeeScore == 21){won = Lee}}
+}
+
+Lin_BackHand8 = pcase {
+ 4: To_1{ball = 1} -> Lee_1
+ 26: To_2{ball = 2} -> Lee_2
+ 2: To_3{ball = 3} -> Lee_3
+ 4: To_4{ball = 4} -> Lee_4
+ 2: Error{ball = 9} -> {LeeScore++; if (LeeScore == 21){won = Lee}}
+}
+
+
+#define leeWin won == lee;
+#assert TieBreakGame reaches leeWin with prob;
