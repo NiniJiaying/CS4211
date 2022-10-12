@@ -22,9 +22,8 @@
 
 
 
-enum{x, lee_1_ct, lee_2_ct, y, z, lin_6_ct, lin_5_ct}; //serve position
-enum{lee, lin};
-enum{na};
+enum{x, lee_1_ct, lee_2_ct, y, z, lin_5_ct, lin_6_ct}; //serve position
+enum{lee, lin, na};
 
 //#define lee_1_ct 0;
 //#define lee_2_ct 1;
@@ -262,7 +261,6 @@ Lin_BackHand8 = pcase {
  4: To_4{ball = 4} -> Lee_4
  2: Error{ball = 9} -> {leescore++; if (leescore >= 21 && (leescore-linscore) >= 2 && leescore <= 30) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
 };
-
 
 #define leeWin won == lee;
 #assert TieBreakGame reaches leeWin with prob;
