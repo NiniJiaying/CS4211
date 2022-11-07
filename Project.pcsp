@@ -45,14 +45,14 @@ Lee_Serve = [won == na && turn == lee_1_ct ]LeeReady_1_Ct -> Lee_ServeFrom1 [] [
 Lee_ServeFrom1 = pcase {
   100: To_6 {ball = 6} -> Lin_6
   0: To_8 {ball = 8} -> Lin_8
-  0: Serve_err{ball=9} -> Leefault{linscore++; if (linscore >= 21 && (linscore-leescore) >= 2 && linscore <= 30) {won = lin} 
+  0: Serve_err{ball=9} -> Leefault{linscore++; if (linscore >= 11 ) {won = lin} 
       		                                                        else { if (linscore % 2 == 0) { turn = 6 } else { turn = 5 } }}-> NextPt
 };
 
 Lee_ServeFrom2 = pcase {
   24: To_5 {ball = 5} -> Lin_5
   5: To_7 {ball = 7} -> Lin_7
-  0: Serve_err{ball=9} -> Leefault{linscore++; if (linscore >= 21 && (linscore-leescore) >= 2 && linscore <= 30) {won = lin} 
+  0: Serve_err{ball=9} -> Leefault{linscore++; if (linscore >= 11 ) {won = lin} 
       		                                                        else { if (linscore % 2 == 0) { turn = 6 } else { turn = 5 } }}-> NextPt
 };
 
@@ -61,14 +61,14 @@ Lin_Serve = [won == na && turn == lin_5_ct]LinReady_5_Ct -> Lin_ServeFrom5 [] [ 
 Lin_ServeFrom5 = pcase {
   27: To_2 {ball = 2} -> Lee_2
   4: To_4 {ball = 4} -> Lee_4
-  0: Serve_err{ball=9} -> Linfault{leescore++; if (leescore >= 21 && (leescore-linscore) >= 2 && leescore <= 30) {won = lee} 
+  0: Serve_err{ball=9} -> Linfault{leescore++; if (leescore >= 11 ) {won = lee} 
       		                                                        else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
 };
 
 Lin_ServeFrom6 = pcase {
   28: To_1 {ball = 1} -> Lee_1
   4: To_3 {ball = 3} -> Lee_3
-  0: Serve_err{ball=9} -> Linfault{leescore++; if (leescore >= 21 && (leescore-linscore) >= 2 && leescore <= 30) {won = lee} 
+  0: Serve_err{ball=9} -> Linfault{leescore++; if (leescore >= 11 ) {won = lee} 
       		                                                        else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
 };
 
@@ -77,53 +77,54 @@ NextPt = Lee_Serve [] Lin_Serve [] ([won != na] GameOver -> Skip);
 Lee_1 = pcase {
  191: Lee_ForeHand -> Lee_ForeHand1
  10: Lee_BackHand -> Lee_BackHand1
- 2: No_Hit -> {linscore++; if (linscore >= 21 && (linscore-leescore) >= 2 && linscore <= 30) {won = lin} 
+ 2: No_Hit -> {linscore++; if (linscore >= 11 ) {won = lin} 
       		                                                        else { if (linscore % 2 == 0) { turn = 6 } else { turn = 5 } }}-> NextPt
 };
 
 Lee_2 = pcase {
  32: Lee_ForeHand -> Lee_ForeHand2
  147: Lee_BackHand -> Lee_BackHand2
- 9: No_Hit -> {linscore++; if (linscore >= 21 && (linscore-leescore) >= 2 && linscore <= 30) {won = lin} 
+ 9: No_Hit -> {linscore++; if (linscore >= 11 ) {won = lin} 
       		                                                        else { if (linscore % 2 == 0) { turn = 6 } else { turn = 5 } }}-> NextPt
 };
 
 Lee_3 = pcase {
  166: Lee_ForeHand -> Lee_ForeHand3
  2: Lee_BackHand -> Lee_BackHand3
- 8: No_Hit -> {linscore++; if (linscore >= 21 && (linscore-leescore) >= 2 && linscore <= 30) {won = lin} 
+ 8: No_Hit -> {linscore++; if (linscore >= 11 ) {won = lin} 
       		                                                        else { if (linscore % 2 == 0) { turn = 6 } else { turn = 5 } }}-> NextPt
 };
 
 Lee_4 = pcase {
  84: Lee_ForeHand -> Lee_ForeHand4
  34: Lee_BackHand -> Lee_BackHand4
- 10: No_Hit -> {linscore++; if (linscore >= 21 && (linscore-leescore) >= 2 && linscore <= 30) {won = lin} 
+ 10: No_Hit -> {linscore++; if (linscore >= 11 ) {won = lin} 
       		                                                        else { if (linscore % 2 == 0) { turn = 6 } else { turn = 5 } }}-> NextPt
+ //change to zero, if Lee do his defend well, he wll have a higher probabilty to win this tiebreaker game.
 };
 
 Lin_5 = pcase {
  192: Lin_ForeHand -> Lin_ForeHand5
  35: Lin_BackHand -> Lin_BackHand5
- 7: No_Hit -> {leescore++; if (leescore >= 21 && (leescore-linscore) >= 2 && leescore <= 30) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
+ 7: No_Hit -> {leescore++; if (leescore >= 11 ) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
 };
 
 Lin_6 = pcase {
  20: Lin_ForeHand -> Lin_ForeHand6
  177: Lin_BackHand -> Lin_BackHand6
- 1: No_Hit -> {leescore++; if (leescore >= 21 && (leescore-linscore) >= 2 && leescore <= 30) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
+ 1: No_Hit -> {leescore++; if (leescore >= 11 ) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
 };
 
 Lin_7 = pcase {
  87: Lin_ForeHand -> Lin_ForeHand7
  2: Lin_BackHand -> Lin_BackHand7
- 9: No_Hit -> {leescore++; if (leescore >= 21 && (leescore-linscore) >= 2 && leescore <= 30) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
+ 9: No_Hit -> {leescore++; if (leescore >= 11 ) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
 };
 
 Lin_8 = pcase {
  116: Lin_ForeHand -> Lin_ForeHand8
  38: Lin_BackHand -> Lin_BackHand8
- 4: No_Hit -> {leescore++; if (leescore >= 21 && (leescore-linscore) >= 2 && leescore <= 30) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
+ 4: No_Hit -> {leescore++; if (leescore >= 11 ) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
 };
 
 Lee_ForeHand1 = pcase {
@@ -131,7 +132,7 @@ Lee_ForeHand1 = pcase {
  32: To_6{ball = 6} -> Lin_6
  26: To_7{ball = 7} -> Lin_7
  40: To_8{ball = 8} -> Lin_8
- 5: Error{ball = 9} -> {linscore++; if (linscore >= 21 && (linscore-leescore) >= 2 && linscore <= 30) {won = lin} 
+ 5: Error{ball = 9} -> {linscore++; if (linscore >= 11 ) {won = lin} 
       		                                                        else { if (linscore % 2 == 0) { turn = 6 } else { turn = 5 } }}-> NextPt
 };
 
@@ -140,7 +141,7 @@ Lee_BackHand1 = pcase {
  0: To_6{ball = 6} -> Lin_6
  5: To_7{ball = 7} -> Lin_7
  2: To_8{ball = 8} -> Lin_8
- 0: Error{ball = 9} -> {linscore++; if (linscore >= 21 && (linscore-leescore) >= 2 && linscore <= 30) {won = lin} 
+ 0: Error{ball = 9} -> {linscore++; if (linscore >= 11 ) {won = lin} 
       		                                                        else { if (linscore % 2 == 0) { turn = 6 } else { turn = 5 } }}-> NextPt
 };
 
@@ -149,7 +150,7 @@ Lee_ForeHand2 = pcase {
  15: To_6{ball = 6} -> Lin_6
  0: To_7{ball = 7} -> Lin_7
  7: To_8{ball = 8} -> Lin_8
- 5: Error{ball = 9} -> {linscore++; if (linscore >= 21 && (linscore-leescore) >= 2 && linscore <= 30) {won = lin} 
+ 5: Error{ball = 9} -> {linscore++; if (linscore >= 11 ) {won = lin} 
       		                                                        else { if (linscore % 2 == 0) { turn = 6 } else { turn = 5 } }}-> NextPt
 };
 
@@ -158,7 +159,7 @@ Lee_BackHand2 = pcase {
  58: To_6{ball = 6} -> Lin_6
  15: To_7{ball = 7} -> Lin_7
  45: To_8{ball = 8} -> Lin_8
- 6: Error{ball = 9} -> {linscore++; if (linscore >= 21 && (linscore-leescore) >= 2 && linscore <= 30) {won = lin} 
+ 6: Error{ball = 9} -> {linscore++; if (linscore >= 11 ) {won = lin} 
       		                                                        else { if (linscore % 2 == 0) { turn = 6 } else { turn = 5 } }}-> NextPt
 };
 
@@ -167,7 +168,7 @@ Lee_ForeHand3 = pcase {
  29: To_6{ball = 6} -> Lin_6
  41: To_7{ball = 7} -> Lin_7
  23: To_8{ball = 8} -> Lin_8
- 10: Error{ball = 9} -> {linscore++; if (linscore >= 21 && (linscore-leescore) >= 2 && linscore <= 30) {won = lin} 
+ 10: Error{ball = 9} -> {linscore++; if (linscore >= 11 ) {won = lin} 
       		                                                        else { if (linscore % 2 == 0) { turn = 6 } else { turn = 5 } }}-> NextPt
 };
 
@@ -176,7 +177,7 @@ Lee_BackHand3 = pcase {
  0: To_6{ball = 6} -> Lin_6
  0: To_7{ball = 7} -> Lin_7
  0: To_8{ball = 8} -> Lin_8
- 1: Error{ball = 9} -> {linscore++; if (linscore >= 21 && (linscore-leescore) >= 2 && linscore <= 30) {won = lin} 
+ 1: Error{ball = 9} -> {linscore++; if (linscore >= 11 ) {won = lin} 
       		                                                        else { if (linscore % 2 == 0) { turn = 6 } else { turn = 5 } }}-> NextPt
 };
 
@@ -185,8 +186,9 @@ Lee_ForeHand4 = pcase {
  18: To_6{ball = 6} -> Lin_6
  5: To_7{ball = 7} -> Lin_7
  36: To_8{ball = 8} -> Lin_8
- 7: Error{ball = 9} -> {linscore++; if (linscore >= 21 && (linscore-leescore) >= 2 && linscore <= 30) {won = lin} 
+ 7: Error{ball = 9} -> {linscore++; if (linscore >= 11 ) {won = lin} 
       		                                                        else { if (linscore % 2 == 0) { turn = 6 } else { turn = 5 } }}-> NextPt
+ 
 };
 
 Lee_BackHand4 = pcase {
@@ -194,7 +196,7 @@ Lee_BackHand4 = pcase {
  17: To_6{ball = 6} -> Lin_6
  1: To_7{ball = 7} -> Lin_7
  5: To_8{ball = 8} -> Lin_8
- 1: Error{ball = 9} -> {linscore++; if (linscore >= 21 && (linscore-leescore) >= 2 && linscore <= 30) {won = lin} 
+ 1: Error{ball = 9} -> {linscore++; if (linscore >= 11 ) {won = lin} 
       		                                                        else { if (linscore % 2 == 0) { turn = 6 } else { turn = 5 } }}-> NextPt
 };
 
@@ -203,7 +205,7 @@ Lin_ForeHand5 = pcase {
  27: To_2{ball = 2} -> Lee_2
  54: To_3{ball = 3} -> Lee_3
  32: To_4{ball = 4} -> Lee_4
- 11: Error{ball = 9} -> {leescore++; if (leescore >= 21 && (leescore-linscore) >= 2 && leescore <= 30) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
+ 11: Error{ball = 9} -> {leescore++; if (leescore >= 11 ) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
 };
 
 Lin_BackHand5 = pcase {
@@ -211,7 +213,7 @@ Lin_BackHand5 = pcase {
  4: To_2{ball = 2} -> Lee_2
  23: To_3{ball = 3} -> Lee_3
  1: To_4{ball = 4} -> Lee_4
- 1: Error{ball = 9} -> {leescore++; if (leescore >= 21 && (leescore-linscore) >= 2 && leescore <= 30) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
+ 1: Error{ball = 9} -> {leescore++; if (leescore >= 11 ) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
 };
 
 Lin_ForeHand6 = pcase {
@@ -219,7 +221,7 @@ Lin_ForeHand6 = pcase {
  4: To_2{ball = 2} -> Lee_2
  2: To_3{ball = 3} -> Lee_3
  9: To_4{ball = 4} -> Lee_4
-2: Error{ball = 9} -> {leescore++; if (leescore >= 21 && (leescore-linscore) >= 2 && leescore <= 30) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
+2: Error{ball = 9} -> {leescore++; if (leescore >= 11 ) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
 };
 
 Lin_BackHand6 = pcase {
@@ -227,7 +229,7 @@ Lin_BackHand6 = pcase {
  61: To_2{ball = 2} -> Lee_2
  55: To_3{ball = 3} -> Lee_3
  26: To_4{ball = 4} -> Lee_4
- 12: Error{ball = 9} -> {leescore++; if (leescore >= 21 && (leescore-linscore) >= 2 && leescore <= 30) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
+ 12: Error{ball = 9} -> {leescore++; if (leescore >= 11 ) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
 };
 
 Lin_ForeHand7 = pcase {
@@ -235,7 +237,7 @@ Lin_ForeHand7 = pcase {
  14: To_2{ball = 2} -> Lee_2
  14: To_3{ball = 3} -> Lee_3
  5: To_4{ball = 4} -> Lee_4
- 5: Error{ball = 9} -> {leescore++; if (leescore >= 21 && (leescore-linscore) >= 2 && leescore <= 30) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
+ 5: Error{ball = 9} -> {leescore++; if (leescore >= 11 ) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
 };
 
 Lin_BackHand7 = pcase {
@@ -243,7 +245,7 @@ Lin_BackHand7 = pcase {
  1: To_2{ball = 2} -> Lee_2
  0: To_3{ball = 3} -> Lee_3
  0: To_4{ball = 4} -> Lee_4
- 0: Error{ball = 9} -> {leescore++; if (leescore >= 21 && (leescore-linscore) >= 2 && leescore <= 30) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
+ 0: Error{ball = 9} -> {leescore++; if (leescore >= 11 ) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
 };
 
 Lin_ForeHand8 = pcase {
@@ -251,7 +253,7 @@ Lin_ForeHand8 = pcase {
  24: To_2{ball = 2} -> Lee_2
  24: To_3{ball = 3} -> Lee_3
  45: To_4{ball = 4} -> Lee_4
- 3: Error{ball = 9} -> {leescore++; if (leescore >= 21 && (leescore-linscore) >= 2 && leescore <= 30) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
+ 3: Error{ball = 9} -> {leescore++; if (leescore >= 11 ) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
 };
 
 Lin_BackHand8 = pcase {
@@ -259,7 +261,7 @@ Lin_BackHand8 = pcase {
  26: To_2{ball = 2} -> Lee_2
  2: To_3{ball = 3} -> Lee_3
  4: To_4{ball = 4} -> Lee_4
- 2: Error{ball = 9} -> {leescore++; if (leescore >= 21 && (leescore-linscore) >= 2 && leescore <= 30) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
+ 2: Error{ball = 9} -> {leescore++; if (leescore >= 11 ) {won = lee} else { if (lee % 2 == 0) { turn = 1 } else { turn = 2 } }}-> NextPt
 };
 
 #define leeWin won == lee;
