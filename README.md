@@ -1,2 +1,2 @@
 # CS4211
-We are a group of Chinese coders
+If you are reading this shows that you have read this README.md :)
